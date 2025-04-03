@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Login | Blood Bank</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "poppins",sans-serif;
+        }
+        body{
+            height: 100vh;
+            width: 100%;
+            background: #000;
+            color: #fff;
+        }
+        .background{
+            background: url(backgroun3.jpg) no-repeat;
+            background-position: center;
+            background-size:cover ;
+            height: 100vh;
+            width: 100%;
+            filter: blur(10px);
+            position: fixed;
+            z-index: -1;
+        }
+
+        header{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 13%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .navbar a {
+            position: relative;
+            font-size: 16px;
+            color: #fff;
+            margin-right: 30px;
+            text-decoration: none;
+        }
+        .navbar a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            bottom: -5px;
+            border-radius: 5px;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: .5s ease;
+        }
+        .navbar a:hover::after {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            padding: 80px 40px 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .container h2 {
+            text-align: center;
+            color: #f72d7a;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #loginForm input {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: none;
+            outline: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            font-size: 16px;
+            padding: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        #loginForm input:focus {
+            border-bottom-color: #f72d7a;
+        }
+
+        #loginForm input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #loginForm button {
+            background: #f72d7a;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #loginForm button:hover {
+            background: #d62568;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .forgot-register {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .forgot-register a {
+            color: #f72d7a;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-register a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #0f0;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #f72d7a;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 80px 20px 40px;
+            }
+            
+            header {
+                padding: 15px 5%;
+                font-size: 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .navbar {
+                display: flex;
+                gap: 15px;
+                margin-right: 0;
+            }
+            
+            .navbar a {
+                margin-right: 0;
+            }
+            
+            .forgot-register {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <header>
+        🩸 Blood Bank Management System
+        <nav class="navbar">
+            <a href="{% url 'home' %}">Home</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Donor Login</h2>
+        <form method="post" id="loginForm">
+            {% csrf_token %}
+            
+            {% if error %}
+                <div class="message error">
+                    {{ error }}
+                </div>
+            {% endif %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <input type="text" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <div class="forgot-register">
+                <a href="{% url 'register_donor' %}">Not registered yet? Sign up</a>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <footer>
+        &copy; 2025 Blood Bank Management System | Made with ❤️ to save lives
+    </footer>
+
+    <script>
+        // Simple password toggle (optional)
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.textContent = '👁️‍🗨️';
+                } else {
+                    input.type = 'password';
+                    this.textContent = '👁️';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

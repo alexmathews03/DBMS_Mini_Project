@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard | Blood Bank</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            height: 100vh;
+            width: 100%;
+            background: #000;
+            color: #fff;
+        }
+        
+        .background {
+            background: url(backgroun3.jpg) no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+            width: 100%;
+            filter: blur(10px);
+            position: fixed;
+            z-index: -1;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 13%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        
+        .navbar a {
+            position: relative;
+            font-size: 16px;
+            color: #fff;
+            margin-right: 30px;
+            text-decoration: none;
+        }
+        
+        .navbar a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            bottom: -5px;
+            border-radius: 5px;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: .5s ease;
+        }
+        
+        .navbar a:hover::after {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 30px;
+        }
+        
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            padding: 80px 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-header h2 {
+            color: #f72d7a;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .donor-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #f72d7a;
+            margin-bottom: 30px;
+        }
+        
+        .detail-item {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-item strong {
+            color: #f72d7a;
+            display: inline-block;
+            width: 150px;
+        }
+        
+        .eligible {
+            color: #0f0;
+        }
+        
+        .not-eligible {
+            color: #f72d7a;
+        }
+        
+        .update-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border-top: 4px solid #f72d7a;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #f72d7a;
+            font-size: 18px;
+        }
+        
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 12px;
+            color: #f72d7a;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #f72d7a;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .form-control:focus {
+            outline: 2px solid #f72d7a;
+            box-shadow: 0 0 10px rgba(247, 45, 122, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .form-control option {
+            background: #000;
+            color: white;
+            padding: 10px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: #f72d7a;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #d62568;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 50px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            border: 2px solid #f72d7a;
+        }
+        
+        .modal h3 {
+            color: #f72d7a;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .modal p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .modal-btn {
+            background: #f72d7a;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn:hover {
+            background: #d62568;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+                font-size: 20px;
+            }
+            
+            .container {
+                padding: 60px 20px;
+            }
+            
+            .detail-item strong {
+                width: 120px;
+            }
+            
+            .form-control {
+                font-size: 18px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <header>
+        🩸 Blood Bank Management System
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <form action="{% url 'donor_logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h2>Your Donor Profile</h2>
+        </div>
+        
+        <div class="donor-details">
+            <div class="detail-item">
+                <strong>Name:</strong> {{ donor.name }}
+            </div>
+            
+            <div class="detail-item">
+                <strong>Email:</strong> {{ donor.email }}
+            </div>
+            
+            <div class="detail-item">
+                <strong>Blood Type:</strong> {{ donor.blood_type }}
+            </div>
+            
+            <div class="detail-item">
+                <strong>Status:</strong> 
+                <span class="{% if donor.has_disqualifying_disease %}not-eligible{% else %}eligible{% endif %}">
+                    {% if donor.has_disqualifying_disease %}
+                        Not Eligible to Donate
+                    {% else %}
+                        Eligible to Donate
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="update-form">
+            <h3 style="color: #f72d7a; margin-bottom: 20px; text-align: center;">Update Health Status</h3>
+            <form id="updateForm" method="post" action="{% url 'update_donor' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disease-status">Have you contracted any blood-borne diseases?</label>
+                    <div class="select-wrapper">
+                        <select id="disease-status" name="has_disqualifying_disease" class="form-control">
+                            <option value="false" {% if not donor.has_disqualifying_disease %}selected{% endif %}>No, I'm healthy</option>
+                            <option value="true" {% if donor.has_disqualifying_disease %}selected{% endif %}>Yes, I have a medical condition</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Status</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ineligibility Modal -->
+    <div id="ineligibleModal" class="modal">
+        <div class="modal-content">
+            <h3>We're Sorry</h3>
+            <p>You are not eligible to donate blood now. Thank you for your honesty and previous contributions.</p>
+            <button id="confirmBtn" class="modal-btn">I Understand</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Blood Bank Management System | Made with ❤️ to save lives
+    </footer>
+
+    <script>
+        // Handle form submission
+        document.getElementById('updateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const diseaseStatus = document.getElementById('disease-status').value === 'true';
+            
+            if (diseaseStatus) {
+                // Show modal if user selected "Yes" for diseases
+                document.getElementById('ineligibleModal').style.display = 'flex';
+            } else {
+                // Normal form submission for other updates
+                this.submit();
+            }
+        });
+
+        // Handle modal confirmation
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            // Submit the form (which will delete the donor)
+            document.getElementById('updateForm').submit();
+        });
+
+        // Enhanced dropdown visibility
+        const diseaseStatus = document.getElementById('disease-status');
+        
+        diseaseStatus.addEventListener('focus', function() {
+            this.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            this.style.color = '#fff';
+        });
+        
+        diseaseStatus.addEventListener('blur', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        });
+        
+        // Mobile-friendly dropdown
+        diseaseStatus.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                this.style.fontSize = '18px';
+                this.style.padding = '15px';
+            }
+        });
+    </script>
+</body>
+</html>

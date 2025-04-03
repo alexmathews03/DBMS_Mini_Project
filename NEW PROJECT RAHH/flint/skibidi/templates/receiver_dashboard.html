@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver Dashboard | Blood Bank</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .background {
+            background: url('backgroun3.jpg') no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+            width: 100%;
+            filter: blur(10px);
+            position: fixed;
+            z-index: -1;
+        }
+        header {
+            padding: 25px 13%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        .container {
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            margin: 40px auto;
+            max-width: 1200px;
+        }
+        h1 {
+            color: #f72d7a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background-color: #f72d7a;
+            color: white;
+        }
+        tr:hover {
+            background-color: rgba(247, 45, 122, 0.1);
+        }
+        .action-btn {
+            display: none;
+            background: #f72d7a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .action-btn:hover {
+            background: #d62568;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 30px;
+        }
+        .logout-btn:hover {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        .success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #0f0;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #f72d7a;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+        .home-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 30px;
+            text-decoration: none;
+        }
+        .home-btn:hover {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <header>
+        🩸 Receiver Dashboard
+        <nav class="navbar">
+            <a href="{% url 'home' %}" class="home-btn">Home</a>
+            <form action="{% url 'receiver_logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Available Donors</h1>
+        
+        <!-- Django messages integration -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}" style="display: block;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- JavaScript-controlled message (hidden by default) -->
+        <div id="jsSuccessMessage" class="message success" style="display: none;">
+            Appointment booked successfully!
+        </div>
+        
+        <div id="jsErrorMessage" class="message error" style="display: none;">
+            Error booking appointment. Please try again.
+        </div>
+        
+        <table id="donorsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blood Type</th>
+                    <th>Email</th>
+                    <th>Last Donation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donor in donors %}
+                <tr data-email="{{ donor.email }}" onclick="selectDonor(this)">
+                    <td>{{ donor.name }}</td>
+                    <td>{{ donor.blood_type }}</td>
+                    <td>{{ donor.email }}</td>
+                    <td>{{ donor.last_donation_date|date:"Y-m-d" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No available donors found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button id="bookBtn" class="action-btn" onclick="bookAppointment()">Book Appointment</button>
+    </div>
+
+    <footer>
+        &copy; 2025 Blood Bank Management System | Made with ❤️ to save lives
+    </footer>
+
+    <script>
+        let selectedDonorEmail = null;
+        
+        function selectDonor(row) {
+            // Remove highlight from all rows
+            document.querySelectorAll('#donorsTable tbody tr').forEach(r => {
+                r.style.backgroundColor = '';
+            });
+            
+            // Highlight selected row
+            row.style.backgroundColor = 'rgba(247, 45, 122, 0.2)';
+            selectedDonorEmail = row.getAttribute('data-email');
+            
+            // Show book button
+            document.getElementById('bookBtn').style.display = 'block';
+            
+            // Hide any messages
+            document.getElementById('jsSuccessMessage').style.display = 'none';
+            document.getElementById('jsErrorMessage').style.display = 'none';
+            
+            // Hide Django messages after new selection
+            document.querySelectorAll('.message').forEach(msg => {
+                if (msg.id !== 'jsSuccessMessage' && msg.id !== 'jsErrorMessage') {
+                    msg.style.display = 'none';
+                }
+            });
+        }
+        
+        function bookAppointment() {
+            if (!selectedDonorEmail) return;
+            
+            // Show loading state
+            const bookBtn = document.getElementById('bookBtn');
+            bookBtn.disabled = true;
+            bookBtn.textContent = 'Booking...';
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('email', selectedDonorEmail);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            
+            fetch('{% url "book_appointment" %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    // If we want to stay on the same page and show a message
+                    // instead of following the redirect, we can do this:
+                    showSuccessMessage();
+                    removeDonorRow();
+                    resetSelection();
+                    return;
+                }
+                return response.json();
+            })
+            .catch(error => {
+                showErrorMessage();
+            })
+            .finally(() => {
+                bookBtn.disabled = false;
+                bookBtn.textContent = 'Book Appointment';
+            });
+        }
+        
+        function showSuccessMessage() {
+            const successMsg = document.getElementById('jsSuccessMessage');
+            successMsg.style.display = 'block';
+            successMsg.scrollIntoView({ behavior: 'smooth' });
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showErrorMessage() {
+            const errorMsg = document.getElementById('jsErrorMessage');
+            errorMsg.style.display = 'block';
+            errorMsg.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function removeDonorRow() {
+            if (selectedDonorEmail) {
+                const row = document.querySelector(`tr[data-email="${selectedDonorEmail}"]`);
+                if (row) row.remove();
+            }
+        }
+        
+        function resetSelection() {
+            selectedDonorEmail = null;
+            document.getElementById('bookBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

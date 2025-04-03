@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Management System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            height: 100vh;
+            width: 100%;
+            background: #000;
+            color: #fff;
+        }
+        .background {
+            background: url(backgroun3.jpg) no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+            width: 100%;
+            filter: blur(10px);
+            position: fixed;
+            z-index: -1;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 13%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        .main-container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+        .welcome-message {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        .welcome-message h1 {
+            color: #f72d7a;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        .welcome-message p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .btn {
+            background: #f72d7a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #d62568;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn-donor {
+            background: #f72d7a;
+        }
+        .btn-receiver {
+            background: #2d7af7;
+        }
+        .btn-receiver:hover {
+            background: #2568d6;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <header>
+        🩸 Blood Bank Management System
+    </header>
+
+    <div class="main-container">
+        <div class="welcome-message">
+            <h1>Save Lives With Us</h1>
+            <p>Every blood donation can save up to 3 lives. Join our community of donors or find the blood type you need.</p>
+            
+            <div class="action-buttons">
+                <a href="{% url 'donor_login' %}" class="btn btn-donor">I'm a Donor</a>
+                <a href="{% url 'receiver_login' %}" class="btn btn-receiver">I Need Blood</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Blood Bank Management System | Made with ❤️ to save lives
+    </footer>
+</body>
+</html>
